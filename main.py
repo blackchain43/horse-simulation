@@ -5,12 +5,12 @@ from display_results import display_results
 
 def main():
     # Load game info from CSV
-    game_info, num_cells, rounds, num_horses = load_game_info("game_info.csv")
+    game_info, num_cells, rounds, num_horses, vip_players = load_game_info("game_info.csv")
     # Initialize game map
     game_map = initialize_map(num_cells, game_info)
 
     # Simulate race
-    race_result = simulate_race(game_map, rounds, num_horses)
+    race_result = simulate_race(game_map, rounds, num_horses, vip_players)
 
     # Display results
     display_results(race_result, num_horses)
