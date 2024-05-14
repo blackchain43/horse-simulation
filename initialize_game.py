@@ -27,7 +27,7 @@ def load_game_info(file_path: str) -> tuple[dict, int, int, int, list[int]]:
     return game_info, DEFAULT_NUM_CELLS, DEFAULT_ROUNDS, DEFAULT_NUM_HORSES, vip_players
 
 
-def initialize_map(num_cells: int, game_info: int) -> dict:
+def initialize_map(num_cells: int, game_info: dict) -> dict:
     game_map = {}
     vip_conditions = {
         key[4:]: value for key, value in game_info.items() if key.startswith("vip_")
