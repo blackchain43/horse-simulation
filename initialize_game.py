@@ -1,30 +1,21 @@
 import random
-import csv
-
-DEFAULT_NUM_CELLS = 100
-DEFAULT_ROUNDS = 10
-DEFAULT_NUM_HORSES = 3
+import pandas as pd
 
 
-def load_game_info(file_path: str) -> tuple[dict, int, int, int, list[int]]:
+def load_game_info(file_path: str) -> tuple[dict, list[int]]:
     game_info = {}
     vip_players = []
-    with open(file_path, "r") as csvfile:
-        reader = csv.reader(csvfile)
-        for row in reader:
-            key, value = row[0], row[1]
-            if key == "num_cells":
-                DEFAULT_NUM_CELLS = int(value)
-            elif key == "rounds":
-                DEFAULT_ROUNDS = int(value)
-            elif key == "num_horses":
-                DEFAULT_NUM_HORSES = int(value)
-            elif key == "vip_players":
-                vip_players = [int(x) for x in value.split(",")]
-            else:
+    file_data = pd.read_csv(file_path, header=None, names=["key", "value"])
+
+    for index, row in file_data.iterrows():
+        key, value = row["key"], row["value"]
+        match key:
+            case "vip_players":
+                vip_players = [int(x) for x in value.split(":")]
+            case _:
                 condition, reward = key, int(value)
                 game_info[condition] = reward
-    return game_info, DEFAULT_NUM_CELLS, DEFAULT_ROUNDS, DEFAULT_NUM_HORSES, vip_players
+    return game_info, vip_players
 
 
 def initialize_map(num_cells: int, game_info: dict) -> dict:

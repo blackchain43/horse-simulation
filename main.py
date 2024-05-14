@@ -2,19 +2,22 @@ from initialize_game import initialize_map, load_game_info
 from game_simulation import simulate_race
 from display_results import display_results
 
+NUM_CELLS = 100
+NUM_ROUNDS = 10
+NUM_HORSES = 3
 
 def main():
     # Load game info from CSV
-    game_info, num_cells, rounds, num_horses, vip_players = load_game_info("game_info.csv")
+    game_info, vip_players = load_game_info("game_info.csv")
     # Initialize game map
-    game_map = initialize_map(num_cells, game_info)
+    game_map = initialize_map(NUM_CELLS, game_info)
 
     # Simulate race
-    first_10_rounds_race_result = simulate_race(game_map, rounds, num_horses, vip_players)
+    first_10_rounds_race_result = simulate_race(game_map, NUM_ROUNDS, NUM_HORSES, vip_players)
 
-    race_result = simulate_race(game_map, rounds, num_horses, vip_players, assign_initial_positions(first_10_rounds_race_result[-1]["horse_accumulated_points"]))
+    race_result = simulate_race(game_map, NUM_ROUNDS, NUM_HORSES, vip_players, assign_initial_positions(first_10_rounds_race_result[-1]["horse_accumulated_points"]))
     # Display results
-    display_results(race_result, num_horses)
+    display_results(race_result, NUM_HORSES)
 
 def assign_initial_positions(last_round_results):
     print(f"Last round results {last_round_results}")
