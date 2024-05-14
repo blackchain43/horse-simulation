@@ -1,0 +1,10 @@
+num_cells,100
+rounds,10,
+num_horses,3
+vip_players,1,2
+normal,1
+trapped,-2
+lucky,3
+vip_normal,1
+vip_trapped,-1
+vip_lucky,3
