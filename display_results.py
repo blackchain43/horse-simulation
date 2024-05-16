@@ -1,10 +1,11 @@
 import pandas as pd
 
-def display_results(race_result: list[dict], num_horses: int) -> None:
-    display_data = {}
-    for horse in range(num_horses):
-        display_data[f"Player {horse + 1}"] = [result["round_points"][horse] for result in race_result]
-        display_data[f"Player {horse + 1}"].insert(0, 0)
-    df = pd.DataFrame(display_data)
-    df = df.transpose()
-    print(df)
+
+def display_results(race_result: list[pd.DataFrame], num_horses: int = 3) -> None:
+    # Merge the DataFrames
+    merged_df = pd.concat([df for df in race_result], axis=1)
+    # Select only 'round' and 'round_points' columns
+    selected_df = merged_df[["round_points"]]
+    selected_df.columns = [f"Player {i + 1}" for i in range(num_horses)]
+    transposed_df = selected_df.transpose()
+    print(transposed_df)
