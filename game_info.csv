@@ -1,3 +1,6 @@
+num_horses,3
+num_cells,100
+num_rounds,10
 normal,1
 trapped,-2
 lucky,3

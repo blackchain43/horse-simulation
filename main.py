@@ -1,4 +1,4 @@
-from initialize_game import initialize_map, load_normal_game_info, load_vip_game_info
+from initialize_game import initialize_map, load_normal_game_info, load_vip_game_info, get_map_config
 from game_simulation import (
     race_normal_map,
     race_vip_map,
@@ -8,30 +8,28 @@ from display_results import display_results
 import sys
 import pandas as pd
 
-NUM_CELLS = 100
-NUM_ROUNDS = 10
-NUM_HORSES = 3
-
 
 def script_a():
     # Load game info from CSV
+    map_config = get_map_config("game_info.csv")
     game_info = load_normal_game_info("game_info.csv")
     # Init game map
-    game_map = initialize_map(NUM_CELLS, game_info)
+    game_map = initialize_map(map_config["num_cells"], game_info)
     # Simulate race
-    race_result = race_normal_map(game_map, NUM_ROUNDS, NUM_HORSES)
-    # Display result
+    race_result = race_normal_map(game_map, map_config["num_rounds"], map_config["num_horses"])
+    # # Display result
     display_results(race_result)
 
 
 def script_b():
     # Load game info from CSV
     game_info = load_normal_game_info("game_info.csv")
+    map_config = get_map_config("game_info.csv")
     # Init game map
-    game_map = initialize_map(NUM_CELLS, game_info)
+    game_map = initialize_map(map_config["num_cells"], game_info)
 
     # Simulate first 10 rounds
-    first_10_rounds_result_data = race_normal_map(game_map, NUM_ROUNDS, NUM_HORSES)
+    first_10_rounds_result_data = race_normal_map(game_map, map_config["num_rounds"], map_config["num_horses"])
 
     # Display result of first 10 rounds
     print("==================================================================")
@@ -45,7 +43,7 @@ def script_b():
 
     # Simulate next 10 rounds
     race_result = race_normal_map_with_init_positions(
-        game_map, NUM_ROUNDS, next_initial_positions, NUM_HORSES
+        game_map, map_config["num_rounds"], next_initial_positions, map_config["num_horses"]
     )
     # Display result of next 10 rounds
     print("==================================================================")
@@ -56,14 +54,15 @@ def script_b():
 
 def script_c():
     # Load game info from CSV
+    map_config = get_map_config("game_info.csv")
     vip_game_info, vip_players = load_vip_game_info("game_info.csv")
     normal_game_info = load_normal_game_info("game_info.csv")
     # Init game map
-    vip_game_map = initialize_map(NUM_CELLS, vip_game_info)
-    normal_game_map = initialize_map(NUM_CELLS, normal_game_info)
+    vip_game_map = initialize_map(map_config["num_cells"], vip_game_info)
+    normal_game_map = initialize_map(map_config["num_cells"], normal_game_info)
     # Simulate race
     race_result = race_vip_map(
-        normal_game_map, vip_game_map, NUM_ROUNDS, vip_players, NUM_HORSES
+        normal_game_map, vip_game_map, map_config["num_rounds"], vip_players, map_config["num_horses"]
     )
     # Display result
     display_results(race_result)
