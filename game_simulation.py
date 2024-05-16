@@ -62,6 +62,22 @@ def race_normal_map(
     return [simulate_race(game_map, num_rounds) for _ in range(num_horses)]
 
 
+def race_normal_map_with_init_positions(
+    game_map: dict,
+    num_rounds: int,
+    initial_positions: list[int],
+    num_horses: int = 3,
+):
+    if len(initial_positions) != num_horses:
+        raise ValueError(
+            "Number of initial positions must be equal to the number of horses"
+        )
+    return [
+        simulate_race(game_map, num_rounds, initial_position)
+        for initial_position in initial_positions
+    ]
+
+
 def race_vip_map(
     normal_game_map: dict,
     vip_game_map: dict,

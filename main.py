@@ -1,7 +1,12 @@
 from initialize_game import initialize_map, load_normal_game_info, load_vip_game_info
-from game_simulation import race_normal_map, race_vip_map
+from game_simulation import (
+    race_normal_map,
+    race_vip_map,
+    race_normal_map_with_init_positions,
+)
 from display_results import display_results
 import sys
+import pandas as pd
 
 NUM_CELLS = 100
 NUM_ROUNDS = 10
@@ -24,8 +29,29 @@ def script_b():
     game_info = load_normal_game_info("game_info.csv")
     # Init game map
     game_map = initialize_map(NUM_CELLS, game_info)
-    # Simulate race
-    first_10_rounds_result = race_normal_map(game_map, NUM_ROUNDS, NUM_HORSES)
+
+    # Simulate first 10 rounds
+    first_10_rounds_result_data = race_normal_map(game_map, NUM_ROUNDS, NUM_HORSES)
+
+    # Display result of first 10 rounds
+    print("==================================================================")
+    print("Result of first 10 rounds")
+    display_results(first_10_rounds_result_data)
+    print("==================================================================")
+
+    # Get ranking from previous 10 rounds
+    first_10_rounds_scores = get_last_round_results(first_10_rounds_result_data)
+    next_initial_positions = assign_initial_positions(first_10_rounds_scores)
+
+    # Simulate next 10 rounds
+    race_result = race_normal_map_with_init_positions(
+        game_map, NUM_ROUNDS, next_initial_positions, NUM_HORSES
+    )
+    # Display result of next 10 rounds
+    print("==================================================================")
+    print("Result of next 10 rounds")
+    display_results(race_result)
+    print("==================================================================")
 
 
 def script_c():
@@ -54,7 +80,19 @@ def main(script_name: str):
         raise ValueError(f"Invalid script name: {script_name}")
 
 
-def assign_initial_positions(last_round_results):
+def get_last_round_results(race_result: list[pd.DataFrame]):
+    horse_accumulated_points_last_round = []
+    for df in race_result:
+        # Assuming 'round' is a column in DataFrame
+        last_round_index = df["round"].idxmax()
+        horse_accumulated_points_last_round.append(
+            df.loc[last_round_index, "horse_accumulated_points"]
+        )
+
+    return horse_accumulated_points_last_round
+
+
+def assign_initial_positions(last_round_results: list[int]):
     print(f"Last round results {last_round_results}")
     # Copying the original list to keep track of the original indices
     indexed_results = list(enumerate(last_round_results))
